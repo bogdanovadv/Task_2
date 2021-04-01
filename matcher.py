@@ -1,29 +1,32 @@
-
-def balance(myStr, brackets):
-    openList = ["[","{","("]
-    closeList = ["]","}",")"]
-    for x in openList[::-1]:
-        if not x in brackets:
-            pos = openList.index(x)
-            openList.pop(pos)
-            closeList.pop(pos)
-    print(openList)
-    print(closeList)
-    stack= []
-    for i in myStr:
-        if i in openList:
-            stack.append(i)
-        elif i in closeList:
-            pos = closeList.index(i)
-            if ((len(stack) > 0) and (openList[pos] == stack[len(stack)-1])):
-                stack.pop()
+def matcher(text, brackets):
+    brackets_open = ["[","{","(", "<"]
+    brackets_close = ["]","}",")",">"]
+    for x in brackets_open[::-1]:
+        pos = brackets_open.index(x)
+        if (not x in brackets) and (not brackets_close[pos] in brackets):
+            brackets_open.pop(pos)
+            brackets_close.pop(pos)
+    list = []
+    for i in text:
+        if i in brackets_open:
+            list.append(i)
+        elif i in brackets_close:
+            pos = brackets_close.index(i)
+            if ((len(list) > 0) and (brackets_open[pos] == list[len(list)-1])):
+                list.pop()
             else:
-                print(stack[len(stack)-1], " -3- ", myStr.index(stack[len(stack)-1]))
-                print(i, " -4- ", myStr.index(i))
-                return False, (i, myStr.index(i)), (stack[len(stack)-1], myStr.index(stack[len(stack)-1]))
-    if len(stack) == 0:
+                return False, (i, text.index(i)), (list[len(list)-1], text.index(list[len(list)-1]))
+    if len(list) == 0:
         return True, None, None
 
-print(balance("(a+[b*c]-{d/3})", "(["))
-print(balance("(a+[b*c)-17]", "(["))
-print(balance("(a+[b*c)-17]", "["))
+text = input("Введите выражение: ")
+brackets = input("Введите скобки: ")
+x, y, z = matcher(text, brackets)
+print(f'{x}, {y}, {z}')
+
+#x, y, z = matcher("(a+[b*c]-{d/3})", "([")
+#print(f'{x}, {y}, {z}')
+#x, y, z = matcher("(a+[b*c)-17]", "([")
+#print(f'{x}, {y}, {z}')
+#x, y, z = matcher("(a+[b*c)-17]", "[")
+#print(f'{x}, {y}, {z}')
